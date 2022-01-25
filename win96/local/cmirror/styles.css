@@ -1,0 +1,17 @@
+.codemirror-app>.cmirror-container {
+    background-color: white;
+    height: 100%;
+    width: 100%;
+    font-family: monospace;
+    font-size: 12px;
+    overflow: hidden;
+}
+
+.codemirror-app>.cmirror-container>.cm-editor {
+    height: 100%;
+    width: 100%;
+}
+
+.cm-search {
+    font-size: 16px;
+}
