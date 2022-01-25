@@ -1,0 +1,38 @@
+//!wrt
+/**
+ * Conv2CRLF Copyright (C) Windows 96 Team 2021.
+ */
+
+const term = env.term;
+const args = env.args;
+
+if(args[1] == null) {
+    term.printError("Error: No path was specified.");
+    return;
+}
+
+const resolvedPath = term.resolvePath(env.term.currentPath, args[1]);
+
+if(!FS.exists(resolvedPath)) {
+    term.printError("Error: Path does not exist.");
+    return;
+}
+
+if(!FS.isFile(resolvedPath)) {
+    term.printError("Error: This file is a directory.");
+    return;
+}
+
+term.printlnEscaped("Converting contents...");
+const textContents = await FS.readstr(resolvedPath);
+
+const lines = textContents.split('\n');
+
+lines.map(x => {
+    if(!x.endsWith("\r"))
+        x += "\r";
+});
+
+await FS.writestr(resolvedPath, lines.join('\n'));
+
+term.printlnEscaped("Conversion complete - your file now has CRLF line endings!");
