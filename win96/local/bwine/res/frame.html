@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en-us">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<style>
+			body{margin:0;background:#000;overflow:hidden;}canvas.emscripten{border:0 none}.spinner{height:50px;width:50px;margin:0 auto;-webkit-animation:rotation .8s linear infinite;-moz-animation:rotation .8s linear infinite;-o-animation:rotation .8s linear infinite;animation:rotation .8s linear infinite;border-left:10px solid #0096f0;border-right:10px solid #0096f0;border-bottom:10px solid #0096f0;border-top:10px solid #6400c8;border-radius:100%;background-color:#c864fa}@-webkit-keyframes rotation{from{-webkit-transform:rotate(0)}to{-webkit-transform:rotate(360deg)}}@-moz-keyframes rotation{from{-moz-transform:rotate(0)}to{-moz-transform:rotate(360deg)}}@-o-keyframes rotation{from{-o-transform:rotate(0)}to{-o-transform:rotate(360deg)}}@keyframes rotation{from{transform:rotate(0)}to{transform:rotate(360deg)}}.modalDialog{position:fixed;font-family:Arial,Helvetica,sans-serif;top:0;right:0;bottom:0;left:0;background:rgba(0,0,0,.8);z-index:99999;opacity:0;-webkit-transition:opacity .4s ease-in;-moz-transition:opacity .4s ease-in;transition:opacity .4s ease-in;pointer-events:none}.modalDialog:target{opacity:1;pointer-events:auto}.modalDialog>div{width:400px;position:relative;margin:10% auto;padding:5px 20px 13px 20px;border-radius:10px;background:#fff}.close{background:#606061;color:#fff;line-height:25px;position:absolute;right:-12px;text-align:center;top:-10px;width:24px;text-decoration:none;-webkit-border-radius:12px;border-radius:12px;-webkit-box-shadow:1px 1px 3px #000;box-shadow:1px 1px 3px #000}.close:hover{background:#00d9ff}.scroll-style{max-height:250px;overflow-y:scroll}
+		</style>
+	</head>
+	<body>
+		<div style="display: none" id="loading">
+			<figure id="spinner" style="overflow: visible;">
+				<div class="spinner" style="margin-top: .5em; margin-left: auto; margin-right: auto;"></div>
+			</figure>
+			<div class="emscripten" id="status">Downloading...</div>
+			<div class="emscripten">
+				<progress value="0" max="100" id="progress"></progress>
+			</div>
+		</div>
+		<div id="run-inline" style="display: none">
+			<button id="inline-runbtn" onclick="startInline()">inline</button>
+		</div>
+		<div id="inline">
+			<div style="display: none" class="emscripten">
+				<button id="saveFSImage" style="display: none" onclick="saveFSImage()">Save FS Image</button>         
+				<button id="startbtn" style="display: none" onclick="start()">Start</button>
+				<button id="uploadbtn" style="display: none" onclick="document.getElementById('upload').click()" >Add File(s)</button>
+				<input style="display: none" id="upload" name="upload" onclick="document.getElementById('uploadbtn').click();" onchange="startWithFiles(event.target.files);"  type="file" multiple />
+				<button id="downloadbtn" style="display: none" onclick="buildTree();">Get File(s)</button>
+				<a style="display: none" id="modalLink" href="#openModal">Open</a>
+				<a style="display: none" id="modalLinkExe" href="#openModalExe">Open</a>
+				<span id="sound-checkbox" style="display: none">
+				<input type="checkbox" id="soundToggle" onclick="toggleSound();" />Enable Sound
+				</span>
+				<input type="checkbox" id="pointerLock" checked>Lock/hide mouse pointer
+				<input type="checkbox" id="showConsole" onclick="toggleConsole();" checked>Show console
+				&nbsp;&nbsp;&nbsp;
+				<input type="checkbox" id="resize">Resize canvas
+				<input type="button" value="Fullscreen" onclick="Module.requestFullScreen(document.getElementById('pointerLock').checked, document.getElementById('resize').checked)">
+			</div>
+			<div id="dropzone">
+				<div class="emscripten_border">
+					<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+				</div>
+			</div>
+			<div style="display: none">
+				<textarea class="emscripten" id="output" rows="8" style="display: none"></textarea>
+			</div>
+			<div id="openModal" class="modalDialog">
+				<div>
+					<a href="#close" title="Close" class="close" onclick="done();">X</a>
+					<div>
+						<h3>Get File(s)</h3>
+						<input id="selectedItem" type="text" size="50" readonly>
+						<button onclick="extract();">Get</button>
+					</div>
+					<div id="tree" class="scroll-style">
+					</div>
+					<div>
+						<h3 id="loadStatus">Loading...</h3>
+					</div>
+				</div>
+			</div>
+			<div id="openModalExe" class="modalDialog">
+				<div>
+					<a id="openModalExeClick" href="#close" title="Close" class="close">X</a>
+					<div>
+						<h3>Execute</h3>
+						<div id="message"></div>
+						<div id="items" class="scroll-style"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			function startInline() {
+			    document.getElementById('run-inline').style.display = 'none';
+			    document.getElementById('loading').style.display = '';
+			    Config.isRunningInline = true;
+			    //Config.showUploadDownload = true;
+			    //Config.locateRootBaseUrl = "/boxedwine/fs/";
+			    //Config.locateAppBaseUrl = "/boxedwine/apps/";
+			    //Config.locateOverlayBaseUrl = "/boxedwine/apps/";
+			    Config.urlParams = "p=notepad";
+			    //Config.urlParams = addDefaultOnDemand("p=notepad");
+			    var script = document.createElement('script');
+			    script.src = "boxedwine.js";
+			    document.body.appendChild(script);
+			}
+			function addDefaultOnDemand(params) {
+				if(! params.includes("root=") &&  ! params.includes("ondemand=")) {
+					if(params.length >0) {
+						params = params + "&";
+					}
+					params = params + "ondemand=root&root=fullWine1.7.55-v8&inline-default-ondemand-root-overlay=wine1.7.55-v8-min";
+				}
+				return params;
+			}
+		</script>
+	</body>
+</html>
