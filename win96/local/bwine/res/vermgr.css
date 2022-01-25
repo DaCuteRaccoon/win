@@ -1,0 +1,49 @@
+/*
+bWINE (C) windows96.net
+*/
+
+.boxed-wine-vermgr-app {
+    box-sizing: border-box;
+}
+
+.boxed-wine-vermgr-app>.top {
+    width: 100%;
+    display: flex;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.boxed-wine-vermgr-app>.top>.icon {
+    margin-right: 16px;
+    height: 32px;
+    width: 32px;
+}
+
+.boxed-wine-vermgr-app>.top>.content {
+    flex: 1;
+}
+
+.boxed-wine-vermgr-app>.top>.content>.title {
+    margin-bottom: 1em;
+}
+
+.boxed-wine-vermgr-app>.top>.content>select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.boxed-wine-vermgr-app>.buttons {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 16px;
+}
+
+.boxed-wine-vermgr-app>.buttons>button {
+    height: 23px;
+    min-width: 75px;
+}
+
+.boxed-wine-vermgr-app>.buttons>button:not(.verinfo) {
+    float: right;
+    margin-left: 5px;
+}
